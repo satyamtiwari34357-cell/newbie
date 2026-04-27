@@ -68,6 +68,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>?> getMe() async {
+    if (_token == null) return null;
+    try {
+      final response = await _authService.getMe(_token!);
+      return response["data"];
+    } catch (e) {
+      debugPrint("AuthProvider getMe error: $e");
+      return null;
+    }
+  }
+
+  void updateUser(UserModel user) {
+    _user = user;
+    notifyListeners();
+  }
+
   void logout() {
     _token = null;
     _user = null;

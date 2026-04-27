@@ -6,6 +6,7 @@ import "package:provider/provider.dart";
 import "core/theme.dart";
 import "providers/auth_provider.dart";
 import "providers/booking_provider.dart";
+import "providers/location_provider.dart";
 import "providers/mode_provider.dart";
 import "providers/vendor_provider.dart";
 import "screens/auth/login_screen.dart";
@@ -38,7 +39,8 @@ class ServiceMarketplaceApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ModeProvider()),
         ChangeNotifierProvider(create: (_) => VendorProvider()),
-        ChangeNotifierProvider(create: (_) => BookingProvider())
+        ChangeNotifierProvider(create: (_) => BookingProvider()),
+        ChangeNotifierProvider(create: (_) => LocationProvider()..fetchLocation()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

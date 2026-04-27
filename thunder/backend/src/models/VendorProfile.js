@@ -20,7 +20,9 @@ const vendorProfileSchema = new mongoose.Schema(
         verified: { type: Boolean, default: false }
       }
     ],
-    earnings: { type: Number, default: 0 }
+    earnings: { type: Number, default: 0 },
+    baseCharges: { type: Number, default: 0 },
+    bio: { type: String, default: "" }
   },
   { timestamps: true }
 );

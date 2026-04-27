@@ -3,6 +3,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const validate = require("../middleware/validate");
 const apiResponse = require("../utils/apiResponse");
 const User = require("../models/User");
+const VendorProfile = require("../models/VendorProfile");
 const { generateOTP, verifyOTP } = require("../services/otpService");
 const { signToken } = require("../services/jwtService");
 
@@ -45,9 +46,15 @@ const verifyOtp = asyncHandler(async (req, res) => {
   return apiResponse(res, 200, { token, user }, "Login successful");
 });
 
+const getMe = asyncHandler(async (req, res) => {
+  const profile = await VendorProfile.findOne({ userId: req.user._id });
+  return apiResponse(res, 200, { user: req.user, profile });
+});
+
 module.exports = {
   login,
   verifyOtp,
+  getMe,
   loginValidators,
   verifyOtpValidators
 };

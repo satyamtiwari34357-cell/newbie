@@ -8,6 +8,7 @@ class BookingProvider extends ChangeNotifier {
 
   List<BookingModel> bookings = [];
   bool loading = false;
+  String? errorMessage;
 
   Future<void> fetchBookings(String token) async {
     loading = true;
@@ -23,8 +24,8 @@ class BookingProvider extends ChangeNotifier {
   }
 
   Future<bool> createBooking({
-    required String token,
-    required String vendorId,
+    String? token,
+    String? vendorId,
     required String serviceId,
     required String date,
     required String time,
@@ -41,7 +42,29 @@ class BookingProvider extends ChangeNotifier {
       );
       return true;
     } catch (e) {
-      debugPrint("Booking Error: $e");
+      errorMessage = e.toString();
+      debugPrint("FULL BOOKING ERROR: $e");
+      return false;
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> updateBookingStatus({
+    required String token,
+    required String bookingId,
+    required String status,
+  }) async {
+    loading = true;
+    notifyListeners();
+    try {
+      await _bookingService.updateStatus(token, bookingId, status);
+      // Refresh the entire list to ensure everything is synced with server (vendor assignment, etc.)
+      await fetchBookings(token);
+      return true;
+    } catch (e) {
+      debugPrint("Update Booking Status Error: $e");
       return false;
     } finally {
       loading = false;

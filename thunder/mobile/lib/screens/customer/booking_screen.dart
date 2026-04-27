@@ -6,6 +6,8 @@ import "../../models/vendor_model.dart";
 import "../../providers/auth_provider.dart";
 import "../../providers/booking_provider.dart";
 import "../../services/booking_service.dart";
+import "booking_success_screen.dart";
+
 
 
 class BookingScreen extends StatefulWidget {
@@ -260,6 +262,67 @@ class _BookingScreenState extends State<BookingScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+        ),
+        child: FilledButton(
+          onPressed: (_selectedTime == null || context.watch<BookingProvider>().loading)
+              ? null
+              : () async {
+                  // We use a valid dummy MongoId for serviceId to satisfy the backend validator
+                  final success = await context.read<BookingProvider>().createBooking(
+                    token: auth.token,
+                    vendorId: widget.vendor?.id,
+                    serviceId: "507f1f77bcf86cd799439011", 
+                    date: DateFormat("yyyy-MM-dd").format(_selectedDate),
+                    time: _selectedTime!,
+                  );
+                  if (!context.mounted) return;
+                  if (success) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BookingSuccessScreen(
+                          date: DateFormat("MMM dd, yyyy").format(_selectedDate),
+                          time: _selectedTime!,
+                        ),
+                      ),
+                    );
+                  } else {
+                    final error = context.read<BookingProvider>().errorMessage;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(error ?? "Booking failed. Please try again.")),
+                    );
+                  }
+                },
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(double.infinity, 54),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+          child: context.watch<BookingProvider>().loading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                )
+              : const Text("Confirm & Schedule", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ),
+      ),
     );
   }
+
+  Widget _buildPriceRow(String label, String value, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, fontSize: isTotal ? 16 : 14)),
+        Text(value, style: TextStyle(fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, fontSize: isTotal ? 16 : 14, color: isTotal ? Colors.black : Colors.blueGrey)),
+      ],
+    );
+  }
+
+
 }

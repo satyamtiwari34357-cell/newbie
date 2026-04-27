@@ -22,4 +22,17 @@ class BookingModel {
       paymentStatus: json["paymentStatus"] ?? "pending",
     );
   }
+
+  BookingModel copyWith({
+    String? status,
+    String? paymentStatus,
+  }) {
+    return BookingModel(
+      id: id,
+      date: date,
+      time: time,
+      status: status ?? this.status,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+    );
+  }
 }

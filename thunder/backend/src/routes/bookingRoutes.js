@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 
-router.post("/", auth, createBookingValidators, createBooking);
+router.post("/", createBookingValidators, createBooking);
 router.get("/", auth, getBookings);
 router.put("/:id/status", auth, statusValidators, updateBookingStatus);
 

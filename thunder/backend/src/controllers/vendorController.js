@@ -40,4 +40,19 @@ const getVendorById = asyncHandler(async (req, res) => {
   return apiResponse(res, 200, { vendor, profile });
 });
 
-module.exports = { getVendors, getVendorById };
+const updateVendorProfile = asyncHandler(async (req, res) => {
+  const { name, baseCharges, bio } = req.body;
+
+  const [updatedUser, updatedProfile] = await Promise.all([
+    User.findByIdAndUpdate(req.user._id, { name }, { new: true }),
+    VendorProfile.findOneAndUpdate(
+      { userId: req.user._id },
+      { baseCharges, bio },
+      { new: true, upsert: true }
+    )
+  ]);
+
+  return apiResponse(res, 200, { user: updatedUser, profile: updatedProfile }, "Profile updated successfully");
+});
+
+module.exports = { getVendors, getVendorById, updateVendorProfile };

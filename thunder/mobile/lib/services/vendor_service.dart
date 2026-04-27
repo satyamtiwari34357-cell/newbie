@@ -13,4 +13,17 @@ class VendorService {
   Future<Map<String, dynamic>> getServices() {
     return ApiClient.get(ApiEndpoints.services);
   }
+
+  Future<Map<String, dynamic>> updateProfile({
+    required String token,
+    required String name,
+    required double baseCharges,
+    required String bio,
+  }) {
+    return ApiClient.put(
+      "${ApiEndpoints.vendors}/profile",
+      {"name": name, "baseCharges": baseCharges, "bio": bio},
+      token: token,
+    );
+  }
 }

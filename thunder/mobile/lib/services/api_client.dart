@@ -4,7 +4,7 @@ import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:http/http.dart" as http;
 
 class ApiClient {
-  static String get baseUrl => dotenv.env["API_BASE_URL"] ?? "http://10.0.2.2:5000/api/v1";
+  static String get baseUrl => dotenv.env["API_BASE_URL"] ?? "http://192.168.0.195:5000/api/v1";
 
   static Future<Map<String, dynamic>> get(String path, {String? token}) async {
     final response = await http.get(Uri.parse("$baseUrl$path"), headers: _headers(token));

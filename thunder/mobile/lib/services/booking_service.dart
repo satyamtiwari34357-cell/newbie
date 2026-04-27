@@ -7,8 +7,8 @@ class BookingService {
   }
 
   Future<Map<String, dynamic>> createBooking({
-    required String token,
-    required String vendorId,
+    String? token,
+    String? vendorId,
     required String serviceId,
     required String date,
     required String time,
@@ -16,7 +16,7 @@ class BookingService {
     return ApiClient.post(
       ApiEndpoints.bookings,
       {
-        "vendorId": vendorId,
+        if (vendorId != null) "vendorId": vendorId,
         "serviceId": serviceId,
         "date": date,
         "time": time,

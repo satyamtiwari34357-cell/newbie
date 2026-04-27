@@ -1,0 +1,4 @@
+# ignore secrets (paths are relative to thunder/)
+backend/src/config/serviceAccountKey.json
+mobile/android/app/google-services.json
+mobile/.env
